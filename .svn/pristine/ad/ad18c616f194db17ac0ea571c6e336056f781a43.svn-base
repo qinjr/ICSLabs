@@ -1,0 +1,49 @@
+# Name:Qin Jiarui
+# Student ID:515030910475
+# Execution begins at address 0
+	.pos 0
+init:	irmovl Stack, %esp
+	irmovl Stack, %ebp
+	call Main
+	halt
+
+# Sample linked list
+.align 4
+ele1:
+	.long 0x00a
+	.long ele2
+ele2:
+	.long 0x0b0
+	.long ele3
+ele3:
+	.long 0xc00
+	.long 0
+
+Main:	pushl %ebp
+	rrmovl %esp, %ebp
+	irmovl ele1, %eax
+	pushl %eax
+	call Sum
+	rrmovl %ebp, %esp
+	popl %ebp
+	ret
+
+Sum:	pushl %ebp
+	rrmovl %esp, %ebp
+	xorl %eax, %eax
+	mrmovl 8(%ebp), %edx
+	andl %edx, %edx
+	je End
+
+Loop:	mrmovl (%edx), %ecx
+	addl %ecx, %eax
+	mrmovl 4(%edx), %edx
+	andl %edx, %edx
+	jne Loop
+
+End:	rrmovl %ebp, %esp
+	popl %ebp
+	ret	
+
+	.pos 0x100
+Stack:	

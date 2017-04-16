@@ -1,0 +1,59 @@
+# Name:Qin Jiarui
+# Student ID:515030910475
+# Execution begins at address 0
+	.pos 0
+init:	irmovl Stack, %esp
+	irmovl Stack, %ebp
+	call Main
+	halt
+
+.align 4
+# Source block
+src:
+	.long 0x00a
+	.long 0x0b0
+	.long 0xc00
+# Destination block:
+dest:
+	.long 0x111
+	.long 0x222
+	.long 0x333
+
+Main:	pushl %ebp
+	rrmovl %esp, %ebp
+	irmovl 3, %eax
+	pushl %eax
+	irmovl dest, %eax
+	pushl %eax
+	irmovl src, %eax
+	pushl %eax
+	xorl %eax, %eax
+	call Copy
+	rrmovl %ebp, %esp
+	popl %ebp
+	ret
+
+Copy:	pushl %ebp
+	rrmovl %esp, %ebp
+	mrmovl 8(%ebp), %ebx #src
+	mrmovl 12(%ebp), %ecx #dst
+	mrmovl 16(%ebp), %edx #len
+	andl %edx, %edx
+	je End
+
+Loop:	mrmovl (%ebx), %esi #val
+	rmmovl %esi, (%ecx)
+	xorl %esi, %eax
+	irmovl $4, %edi
+	addl %edi, %ebx
+	addl %edi, %ecx
+	irmovl $1, %edi
+	subl %edi, %edx
+	jg Loop
+
+End:	rrmovl %ebp, %esp
+	popl %ebp
+	ret
+
+	.pos 0x100
+Stack:
